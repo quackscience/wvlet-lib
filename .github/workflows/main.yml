@@ -13,7 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          repository: https://github.com/wvlet/wvlet
+          repository: wvlet/wvlet
       - uses: dorny/paths-filter@v3
         id: filter
         with:
@@ -54,7 +54,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          repository: https://github.com/wvlet/wvlet
+          repository: wvlet/wvlet
       - uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
