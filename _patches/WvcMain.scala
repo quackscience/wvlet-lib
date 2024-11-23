@@ -12,7 +12,8 @@ object WvcMain extends LogSupport:
 
     if (shouldReturn) {
       // If -x is passed, return the SQL result instead of printing
-      return sqlResult  // This will be returned if you capture the output in your C++ code
+      // return sqlResult  // This will be returned if you capture the output in your C++ code
+      System.out.print(sqlResult)
     } else {
       // If -x is not passed, print the result to stdout
       println(sqlResult)  // Print to stdout as usual
