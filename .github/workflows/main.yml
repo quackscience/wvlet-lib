@@ -3,9 +3,11 @@ name: Native
 on:
   workflow_dispatch:
   release:
-    types:
-      - created
+    types: [published]
 
+permissions:
+  contents: write
+  
 jobs:
   build_native:
     name: Cross build with Scala Native
