@@ -3,12 +3,13 @@ package wvlet.lang.native
 import wvlet.lang.compiler.codegen.GenSQL
 import wvlet.lang.compiler.{CompilationUnit, Compiler, CompilerOptions, Symbol, WorkEnv}
 import wvlet.log.{LogLevel, LogSupport, Logger}
+import scala.scalanative.annotation.export
 
 object WvcMain extends LogSupport:
   // Export a C-compatible function that returns the SQL string
-  @extern
+  @export
   def wvlet_compile_query(query: String): String = {
-    val (sql, _) = compileWvletQuery(Array("-q", query))
+    val (sql, _) = compileWvletQuery(Array("-q", query, "-x"))
     sql
   }
 
@@ -19,7 +20,6 @@ object WvcMain extends LogSupport:
     if (shouldReturn) {
       // If -x is passed, return the SQL result instead of printing
       // return sqlResult  // This will be returned if you capture the output in your C++ code
-      println(sqlResult)
     } else {
       // If -x is not passed, print the result to stdout
       println(sqlResult)  // Print to stdout as usual
