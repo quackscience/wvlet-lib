@@ -7,37 +7,16 @@ on:
       - created
 
 jobs:
-  changes:
-    runs-on: ubuntu-latest
-    permissions:
-      pull-requests: read
-    outputs:
-      src: ${{ steps.filter.outputs.src }}
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          repository: wvlet/wvlet
-      - uses: dorny/paths-filter@v3
-        id: filter
-        with:
-          filters: |
-            src:
-              - '.github/workflows/native.yml'
-              - 'project/**'
-              - '**.scala'
-              - '**.sbt'
-              - '**.conf'
-              - '**.json'
-              - '**.wv'
-              - SCALA_VERSION
   build_native:
     name: Cross build with Scala Native
-    needs: changes
-    if: ${{ needs.changes.outputs.src == 'true' }}
     strategy:
       fail-fast: false
       matrix:
         include:
+          - os: ubuntu-latest
+            arch: x64
+            name: linux
+            ext: so
 # TODO This works, but binary signing and notarization is required
 #          - os: macos-latest
 #            arch: arm64
@@ -46,10 +25,6 @@ jobs:
 #          - os: ubuntu-latest
 #            arch: arm64
 #            name: linux
-          - os: ubuntu-latest
-            arch: x64
-            name: linux
-            ext: so
 # TODO Need some tweaks to run sbt on Windows
 #          - os: windows-latest
 #            arch: x64
