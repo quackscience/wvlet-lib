@@ -46,6 +46,7 @@ jobs:
           - os: ubuntu-latest
             arch: x64
             name: linux
+            ext: so
 # TODO Need some tweaks to run sbt on Windows
 #          - os: windows-latest
 #            arch: x64
@@ -70,13 +71,13 @@ jobs:
           ./sbt 'wvcLib/nativeLink'
           ls -alFh wvc/target/scala-${{ env.SCALA_VERSION }}
           FILEPATH=$(find . -name libwvlet.so)
-          cp wvc/target/scala-${{ env.SCALA_VERSION }}/$(find . -name libwvlet.so) \
-          libwvlet.so-${{ matrix.name }}-${{ matrix.arch }}
+          cp $(find . -name libwvlet.${{ matrix.ext }}) \
+          libwvlet_${{ matrix.name }}-${{ matrix.arch }}.${{ matrix.ext }}
       - name: Upload native binary
         uses: actions/upload-artifact@v4
         with:
-          name: libwvlet.so-${{ matrix.name }}-${{ matrix.arch }}
-          path: libwvlet.so-${{ matrix.name }}-${{ matrix.arch }}
+          name: libwvlet_${{ matrix.name }}-${{ matrix.arch }}.${{ matrix.ext }}
+          path: libwvlet_${{ matrix.name }}-${{ matrix.arch }}.${{ matrix.ext }}
   collect_artifact:
     name: Collect wvc binaries
     runs-on: ubuntu-latest
