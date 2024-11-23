@@ -1,4 +1,4 @@
-name: Native
+name: Native Library Builder
 
 on:
   workflow_dispatch:
@@ -6,11 +6,12 @@ on:
     types: [published]
 
 permissions:
-  contents: write
+  contents: write-all
   
 jobs:
   build_native:
     name: Cross build with Scala Native
+    permissions: write-all
     strategy:
       fail-fast: false
       matrix:
