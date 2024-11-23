@@ -67,7 +67,7 @@ jobs:
             gh release upload ${{ github.event.release.tag_name }} "$file"
           done
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ github.TOKEN }}
           
   collect_artifact:
     name: Collect wvc binaries
