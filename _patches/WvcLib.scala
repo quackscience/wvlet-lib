@@ -31,6 +31,5 @@ object WvcLib extends LogSupport:
     *   generated SQL as a CString
     */
   @exported("wvlet_compile_query")
-  def compile_query(queryJson: CString): CString = {
-    stackalloc[CChar](4096).asInstanceOf[CString] // Allocate fixed buffer
-  }.update(0, WvcMain.compileWvletQuery(Array("-q", MessageCodec.of[String].fromJson(fromCString(queryJson)), "-x"))._1.toCharArray)
+  def compile_query(queryJson: CString): CString = 
+    stackalloc[CChar]((1024)).asInstanceOf[CString]
