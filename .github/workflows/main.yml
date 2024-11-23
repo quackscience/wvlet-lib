@@ -6,7 +6,7 @@ on:
     types: [published]
 
 permissions:
-  contents: write-all
+  contents: write
   
 jobs:
   build_native:
