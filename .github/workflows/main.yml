@@ -51,8 +51,9 @@ jobs:
       - name: Build native binary for ${{ matrix.name }}-${{ matrix.arch }}
         run: |
           ./sbt 'wvcLib/nativeLink'
-          ls -alFh wvc/target/scala-${{ env.SCALA_VERSION }}
           FILEPATH=$(find . -name libwvlet.so)
+          echo "Found $FILEPATH"
+          ls -alFh wvc-lib/target/scala-${{ env.SCALA_VERSION }}
           cp $(find . -name libwvlet.${{ matrix.ext }}) \
           libwvlet_${{ matrix.name }}-${{ matrix.arch }}.${{ matrix.ext }}
       - name: Upload native library for ${{ matrix.name }}-${{ matrix.arch }}
@@ -61,6 +62,7 @@ jobs:
           name: libwvlet_${{ matrix.name }}-${{ matrix.arch }}.${{ matrix.ext }}
           path: libwvlet_${{ matrix.name }}-${{ matrix.arch }}.${{ matrix.ext }}
       - name: Upload library to release
+        if: github.event_name == 'release'
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
