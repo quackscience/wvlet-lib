@@ -26,22 +26,24 @@ object WvcLib extends LogSupport:
   /**
     * Compile a Wvlet query and return the SQL as a string
     * @param queryJson
-    *   json string representing query string
+    *   json string representing the query
     * @return
     *   generated SQL as a CString
     */
   @exported("wvlet_compile_query")
-  def compile_query(queryJson: CString): CString =
-    Zone { implicit z =>  // Add implicit Zone for string conversions
-      try
+  def compile_query(queryJson: CString): CString = {
+    val result = Zone { implicit z: Zone => 
+      try {
         val json = fromCString(queryJson)
-        trace(s"query: ${json}")
         val query = MessageCodec.of[String].fromJson(json)
         val args = Array("-q", query, "-x")
         val (sql, _) = WvcMain.compileWvletQuery(args)
         toCString(sql)
-      catch
+      } catch {
         case e: Throwable =>
           warn(e)
           toCString("")
+      }
     }
+    result
+  }
