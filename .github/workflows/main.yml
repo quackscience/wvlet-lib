@@ -69,13 +69,14 @@ jobs:
         run: |
           ./sbt 'wvcLib/nativeLink'
           ls -alFh wvc/target/scala-${{ env.SCALA_VERSION }}
-          cp wvc/target/scala-${{ env.SCALA_VERSION }}/wvc-release-fast \
-          wvc-${{ matrix.name }}-${{ matrix.arch }}
+          FILEPATH=$(find . -name libwvlet.so)
+          cp wvc/target/scala-${{ env.SCALA_VERSION }}/$(find . -name libwvlet.so) \
+          libwvlet.so-${{ matrix.name }}-${{ matrix.arch }}
       - name: Upload native binary
         uses: actions/upload-artifact@v4
         with:
-          name: wvc-${{ matrix.name }}-${{ matrix.arch }}
-          path: wvc-${{ matrix.name }}-${{ matrix.arch }}
+          name: libwvlet.so-${{ matrix.name }}-${{ matrix.arch }}
+          path: libwvlet.so-${{ matrix.name }}-${{ matrix.arch }}
   collect_artifact:
     name: Collect wvc binaries
     runs-on: ubuntu-latest
