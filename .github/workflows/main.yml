@@ -38,6 +38,10 @@ jobs:
       - uses: actions/checkout@v4
         with:
           repository: wvlet/wvlet
+          
+      - name: Local Patches for Library -x
+        run: cp _patches/WvcMain.scala wvc/src/main/scala/wvlet/lang/native/WvcMain.scala
+
       - uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
