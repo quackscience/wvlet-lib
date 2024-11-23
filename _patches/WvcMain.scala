@@ -5,6 +5,12 @@ import wvlet.lang.compiler.{CompilationUnit, Compiler, CompilerOptions, Symbol, 
 import wvlet.log.{LogLevel, LogSupport, Logger}
 
 object WvcMain extends LogSupport:
+  // Export a C-compatible function that returns the SQL string
+  @extern
+  def wvlet_compile_query(query: String): String = {
+    val (sql, _) = compileWvletQuery(Array("-q", query))
+    sql
+  }
 
   def main(args: Array[String]): Unit =
     // Call compileWvletQuery to process the query and check if -x flag was set
@@ -13,7 +19,7 @@ object WvcMain extends LogSupport:
     if (shouldReturn) {
       // If -x is passed, return the SQL result instead of printing
       // return sqlResult  // This will be returned if you capture the output in your C++ code
-      System.out.print(sqlResult)
+      println(sqlResult)
     } else {
       // If -x is not passed, print the result to stdout
       println(sqlResult)  // Print to stdout as usual
@@ -96,11 +102,7 @@ object WvcMain extends LogSupport:
           error(s"Invalid log level pattern: ${p}")
     }
 
-    // Prepare a compiler and input source
-    val compiler = Compiler(
-      CompilerOptions(workEnv = WorkEnv(path = workFolder), sourceFolders = List(workFolder))
-    )
-
+    // Get query from input or stdin
     val query: String = inputQuery match
       case Some(q) => q
       case None =>
@@ -116,20 +118,25 @@ object WvcMain extends LogSupport:
     if (query.trim.isEmpty) {
       warn(s"No query is given. Use -q 'query' option or stdin to feed the query")
       return ("", returnResult)
-    } else {
-      // Compile
-      val inputUnit = CompilationUnit.fromString(query)
-      val compileResult = compiler.compileSingleUnit(inputUnit)
-      compileResult.reportAllErrors
-
-      val ctx = compileResult
-        .context
-        .withCompilationUnit(inputUnit)
-        .withDebugRun(false)
-        .newContext(Symbol.NoSymbol)
-
-      val sql = GenSQL.generateSQL(inputUnit, ctx)
-      return (sql, returnResult) // Return the SQL string and the flag
     }
+
+    // Prepare a compiler and input source
+    val compiler = Compiler(
+      CompilerOptions(workEnv = WorkEnv(path = workFolder), sourceFolders = List(workFolder))
+    )
+
+    // Compile
+    val inputUnit = CompilationUnit.fromString(query)
+    val compileResult = compiler.compileSingleUnit(inputUnit)
+    compileResult.reportAllErrors
+
+    val ctx = compileResult
+      .context
+      .withCompilationUnit(inputUnit)
+      .withDebugRun(false)
+      .newContext(Symbol.NoSymbol)
+
+    val sql = GenSQL.generateSQL(inputUnit, ctx)
+    (sql, returnResult)
   }
 end WvcMain
