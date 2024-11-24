@@ -67,9 +67,9 @@ jobs:
         run: |
           if [ "${{ matrix.ext }}" = "a" ]; then
             STATIC_LIB=wvc-lib/target/scala-${{ env.SCALA_VERSION }}/libwvlet.${{ matrix.ext }}
-            echo "STATIC_LIB is set to $STATIC_LIB"
           fi
           ./sbt 'wvcLib/nativeLink'
+          ./sbt 'wvcLibStatic/nativeLink' 
           FILEPATH=$(find . -name libwvlet.so)
           echo "Found $FILEPATH"
           ls -alFh wvc-lib/target/scala-${{ env.SCALA_VERSION }}
