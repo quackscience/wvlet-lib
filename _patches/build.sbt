@@ -192,9 +192,9 @@ lazy val wvcLibStatic = project
       c.withBuildTarget(BuildTarget.libraryStatic)
         .withBaseName("wvlet")
     },
-    // Pass -fPIC to the compiler and linker
-    nativeCompileOptions += "-fPIC",
-    nativeLinkingOptions += "-fPIC"
+    // Add -fPIC to the scalac options (compiler) and linker options
+    scalacOptions += "-Xcompile-time-only",
+    nativeLinkingOptions += "-fPIC" 
   )
   .dependsOn(wvc)
 
