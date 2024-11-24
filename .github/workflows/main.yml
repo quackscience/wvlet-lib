@@ -61,7 +61,10 @@ jobs:
 
       - name: Docker Setup QEMU
         if: ${{ matrix.name == 'linux' }} && ${{ matrix.arch == 'arm64' }}
-        uses: docker/setup-qemu-action@v3.2.0
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y qemu binfmt-support qemu-user-static
+          docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
             
       - name: Build native binary in ARM64-emulated environment
         if: ${{ matrix.name == 'linux' }} && ${{ matrix.arch == 'arm64' }}
