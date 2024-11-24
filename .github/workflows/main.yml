@@ -47,6 +47,7 @@ jobs:
           cp local/_patches/WvcMain.scala wvc/src/main/scala/wvlet/lang/native/WvcMain.scala
           cp local/_patches/WvcLib.scala wvc/src/main/scala/wvlet/lang/native/WvcLib.scala
           cp local/_patches/Makefile wvc-lib/Makefile
+          cp local/_patches/build.sbt build.sbt 
 
       - uses: actions/setup-java@v4
         with:
@@ -61,7 +62,8 @@ jobs:
       - name: Build native binary for ${{ matrix.name }}-${{ matrix.arch }}
         run: |
           ./sbt 'wvcLib/nativeLink'
-          ./sbt 'wvcLib/nativeStaticLink'
+          STATIC_LIB=wvc-lib/target/scala-${{ env.SCALA_VERSION }}/libwvlet.a
+          ./sbt 'wvcLib/nativeLinkStatic'
           FILEPATH=$(find . -name libwvlet.so)
           echo "Found $FILEPATH"
           ls -alFh wvc-lib/target/scala-${{ env.SCALA_VERSION }}
