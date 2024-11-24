@@ -188,8 +188,7 @@ lazy val wvcLibStatic = project
     buildSettings,
     name := "wvc-lib",
     nativeConfig ~= { c =>
-      c.withBuildTarget(BuildTarget.libraryDynamic)
-        .withBuildTarget(BuildTarget.libraryStatic)
+      c.withBuildTarget(BuildTarget.libraryStatic)
         .withBaseName("wvlet")
     }
   )
