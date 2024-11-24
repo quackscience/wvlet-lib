@@ -25,9 +25,9 @@ jobs:
             arch: arm64
             name: mac
 # TODO It seems arm64 is not available yet (2024-11)
-#          - os: ubuntu-latest
-#            arch: arm64
-#            name: linux
+          - os: ubuntu-latest
+            arch: arm64
+            name: linux
 # TODO Need some tweaks to run sbt on Windows
 #          - os: windows-latest
 #            arch: x64
@@ -58,7 +58,24 @@ jobs:
           SCALA_VERSION=$(cat SCALA_VERSION)
           echo SCALA_VERSION: $SCALA_VERSION
           echo "SCALA_VERSION=$SCALA_VERSION" >> $GITHUB_ENV
+
+      - name: Build native binary in ARM64-emulated environment
+        if: ${{ matrix.name == 'linux' }} && ${{ matrix.arch == 'arm64' }}
+        run: |
+          docker pull arm64v8/ubuntu:latest
+          docker run --rm -v ${{ github.workspace }}:/workspace -w /workspace arm64v8/ubuntu:latest /bin/bash -c "
+          apt-get update &&
+          apt-get install -y openjdk-11-jdk-headless sbt &&
+          ./sbt 'wvcLib/nativeLink' &&
+          ./sbt 'wvcLibStatic/nativeLink' &&
+          mkdir -p out &&
+          FILEPATH=$(find . -name 'libwvlet.*') &&
+          cp $FILEPATH ./out/ &&
+          cd ./out && for f in *.*; do mv -- \"\$f\" \"linux-arm64_\$f\"; done &&
+          ls -alFh"
+          
       - name: Build native binary for ${{ matrix.name }}-${{ matrix.arch }}
+        if: ${{ matrix.name != 'linux' }} && ${{ matrix.arch != 'arm64' }}
         run: |
           ./sbt 'wvcLib/nativeLink'
           ./sbt 'wvcLibStatic/nativeLink' 
@@ -68,6 +85,7 @@ jobs:
           cp $FILEPATH ./out/
           cd ./out && for f in *.*; do mv -- "$f" "${{ matrix.name }}-${{ matrix.arch }}_$f"; done
           ls -alFh
+          
       - name: Upload native library for ${{ matrix.name }}-${{ matrix.arch }}
         uses: actions/upload-artifact@v4
         with:
