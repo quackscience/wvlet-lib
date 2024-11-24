@@ -61,9 +61,8 @@ jobs:
           echo "SCALA_VERSION=$SCALA_VERSION" >> $GITHUB_ENV
       - name: Build native binary for ${{ matrix.name }}-${{ matrix.arch }}
         run: |
-          ./sbt 'wvcLib/nativeLink'
           STATIC_LIB=wvc-lib/target/scala-${{ env.SCALA_VERSION }}/libwvlet.a
-          ./sbt 'wvcLib/nativeLinkStatic'
+          ./sbt 'wvcLib/nativeLink'
           FILEPATH=$(find . -name libwvlet.so)
           echo "Found $FILEPATH"
           ls -alFh wvc-lib/target/scala-${{ env.SCALA_VERSION }}
