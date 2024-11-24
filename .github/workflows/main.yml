@@ -59,6 +59,9 @@ jobs:
           echo SCALA_VERSION: $SCALA_VERSION
           echo "SCALA_VERSION=$SCALA_VERSION" >> $GITHUB_ENV
 
+      - name: Set up Docker Buildx
+        if: ${{ matrix.name == 'linux' }} && ${{ matrix.arch == 'arm64' }}
+        uses: docker/setup-buildx-action@v3
       - name: Build native binary in ARM64-emulated environment
         if: ${{ matrix.name == 'linux' }} && ${{ matrix.arch == 'arm64' }}
         run: |
