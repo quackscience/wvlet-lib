@@ -20,11 +20,6 @@ jobs:
           - os: ubuntu-latest
             arch: x64
             name: linux
-            ext: a
-          - os: ubuntu-latest
-            arch: x64
-            name: linux
-            ext: so
 # TODO This works, but binary signing and notarization is required
 #          - os: macos-latest
 #            arch: arm64
@@ -70,25 +65,24 @@ jobs:
           fi
           ./sbt 'wvcLib/nativeLink'
           ./sbt 'wvcLibStatic/nativeLink' 
-          FILEPATH=$(find . -name libwvlet.so)
+          FILEPATH=$(find . -name libwvlet.*)
           echo "Found $FILEPATH"
           ls -alFh wvc-lib/target/scala-${{ env.SCALA_VERSION }}
-          cp $(find . -name libwvlet.${{ matrix.ext }}) \
-          libwvlet_${{ matrix.name }}-${{ matrix.arch }}.${{ matrix.ext }}
       - name: Upload native library for ${{ matrix.name }}-${{ matrix.arch }}
         uses: actions/upload-artifact@v4
         with:
-          name: libwvlet_${{ matrix.name }}-${{ matrix.arch }}.${{ matrix.ext }}
-          path: libwvlet_${{ matrix.name }}-${{ matrix.arch }}.${{ matrix.ext }}
+          name: libwvlet_${{ matrix.name }}-${{ matrix.arch }}
+          path: |
+            wvc-lib/target/scala-${{ env.SCALA_VERSION }}/libwvlet.*
       - name: Upload library to release
         if: github.event_name == 'release'
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: libwvlet_${{ matrix.name }}-${{ matrix.arch }}.${{ matrix.ext }}
-          asset_name: libwvlet_${{ matrix.name }}-${{ matrix.arch }}.${{ matrix.ext }}
+          file: wvc-lib/target/scala-${{ env.SCALA_VERSION }}/libwvlet.*
           tag: ${{ github.ref }}
           overwrite: true
+          file_glob: true
           
   collect_artifact:
     name: Collect wvc binaries
