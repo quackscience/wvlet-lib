@@ -66,11 +66,12 @@ jobs:
           echo "Found $FILEPATH"
           mkdir -p out
           cp $FILEPATH ./out/
+          ls -alFh ./out
       - name: Upload native library for ${{ matrix.name }}-${{ matrix.arch }}
         uses: actions/upload-artifact@v4
         with:
           name: libwvlet_${{ matrix.name }}-${{ matrix.arch }}
-          path: ./out/ibwvlet.*
+          path: ./out/libwvlet.*
       - name: Upload library to release
         if: github.event_name == 'release'
         uses: svenstaro/upload-release-action@v2
