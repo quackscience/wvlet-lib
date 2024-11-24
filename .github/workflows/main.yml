@@ -21,6 +21,10 @@ jobs:
             arch: x64
             name: linux
             ext: a
+          - os: ubuntu-latest
+            arch: x64
+            name: linux
+            ext: so
 # TODO This works, but binary signing and notarization is required
 #          - os: macos-latest
 #            arch: arm64
@@ -61,7 +65,10 @@ jobs:
           echo "SCALA_VERSION=$SCALA_VERSION" >> $GITHUB_ENV
       - name: Build native binary for ${{ matrix.name }}-${{ matrix.arch }}
         run: |
-          STATIC_LIB=wvc-lib/target/scala-${{ env.SCALA_VERSION }}/libwvlet.a
+          if [ "${{ matrix.ext }}" = "a" ]; then
+            STATIC_LIB=wvc-lib/target/scala-${{ env.SCALA_VERSION }}/libwvlet.${{ matrix.ext }}
+            echo "STATIC_LIB is set to $STATIC_LIB"
+          fi
           ./sbt 'wvcLib/nativeLink'
           FILEPATH=$(find . -name libwvlet.so)
           echo "Found $FILEPATH"
