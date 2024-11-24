@@ -66,8 +66,8 @@ jobs:
           echo "Found $FILEPATH"
           mkdir -p out
           cp $FILEPATH ./out/
-          cd out & for f in *.* ; do mv -- "$f" "{{ matrix.name }}-${{ matrix.arch }}_$f" ; done
-          ls -alFh ./out
+          cd ./out && for f in *.*; do mv -- "$f" "{{ matrix.name }}-${{ matrix.arch }}_$f"; done
+          ls -alFh
       - name: Upload native library for ${{ matrix.name }}-${{ matrix.arch }}
         uses: actions/upload-artifact@v4
         with:
