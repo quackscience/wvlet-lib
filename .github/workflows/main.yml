@@ -64,22 +64,10 @@ jobs:
         uses: docker/setup-qemu-action@v2
         with:
           platforms: arm64
-          
-      - name: Test Arch
-        if: ${{ matrix.name == 'linux' && matrix.arch == 'arm64' }}
-        run: |
-          docker run \
-            --rm \
-            -v $(pwd):/${{ github.workspace }} \
-            -w ${{ github.workspace }} \
-            --platform linux/${{ matrix.arch }} \
-            ${{ matrix.distro }} \
-            uname -a
             
       - name: Build native binary in ARM64-emulated environment
         if: ${{ matrix.name == 'linux' && matrix.arch == 'arm64' }}
         run: |
-          docker pull arm64v8/ubuntu:latest
           docker run --rm -v $(pwd):/${{ github.workspace }} -w ${{ github.workspace }} --platform linux/${{ matrix.arch }} arm64v8/ubuntu:latest /bin/bash -c "
           apt-get update &&
           apt-get install -y openjdk-11-jdk-headless sbt &&
