@@ -20,7 +20,7 @@ jobs:
           - os: ubuntu-latest
             arch: x64
             name: linux
-            ext: so
+            ext: a
 # TODO This works, but binary signing and notarization is required
 #          - os: macos-latest
 #            arch: arm64
