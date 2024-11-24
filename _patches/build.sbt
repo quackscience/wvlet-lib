@@ -176,6 +176,19 @@ lazy val wvcLib = project
     name := "wvc-lib",
     nativeConfig ~= { c =>
       c.withBuildTarget(BuildTarget.libraryDynamic)
+        .withBaseName("wvlet")
+    }
+  )
+  .dependsOn(wvc)
+
+lazy val wvcLibStatic = project
+  .in(file("wvc-lib"))
+  .enablePlugins(ScalaNativePlugin)
+  .settings(
+    buildSettings,
+    name := "wvc-lib",
+    nativeConfig ~= { c =>
+      c.withBuildTarget(BuildTarget.libraryDynamic)
         .withBuildTarget(BuildTarget.libraryStatic)
         .withBaseName("wvlet")
     }
