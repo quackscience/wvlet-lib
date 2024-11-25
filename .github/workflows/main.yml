@@ -74,8 +74,8 @@ jobs:
       - name: Build native libraries for ${{ matrix.name }}-${{ matrix.arch }}
         if: ${{ (matrix.name == 'linux' && matrix.arch == 'arm64') }}
         run: |
-          ./sbt 'wvcLib/nativeLink'
-          ./sbt 'wvcLibStatic/nativeLink'
+          ./sbt 'wvcLibArm64/nativeLink'
+          ./sbt 'wvcLibStaticArm64/nativeLink'
           FILEPATH=$(find . -name 'libwvlet.*')
           echo "Found $FILEPATH"
           mkdir -p out
