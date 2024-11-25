@@ -72,8 +72,8 @@ jobs:
           echo "deb https://repo.scala-sbt.org/scalasbt/debian all main" > /etc/apt/sources.list.d/scala-sbt.list
           apt-get update &&
           apt-get install -y openjdk-11-jdk-headless sbt &&
-          ./sbt 'wvcLib/nativeLink' &&
-          ./sbt 'wvcLibStatic/nativeLink' &&
+          ./sbt 'wvcLibArm64/nativeLink' &&
+          ./sbt 'wvcLibStaticArm64/nativeLink' &&
           mkdir -p out &&
           FILEPATH=$(find . -name 'libwvlet.*') &&
           cp $FILEPATH ./out/ &&
