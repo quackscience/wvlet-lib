@@ -91,7 +91,7 @@ jobs:
           ./sbt 'wvcLib/nativeLink' &&
           ./sbt 'wvcLibStatic/nativeLink' &&
           mkdir -p out &&
-          FILEPATH=$(find . -name 'libwvlet.*') &&
+          FILEPATH=$(find . -name 'libwvlet.*') && echo $FILEPATH &&
           cp $FILEPATH ./out/ &&
           cd ./out && for f in *.*; do mv -- \"\$f\" \"linux-arm64_\$f\"; done &&
           ls -alFh"
