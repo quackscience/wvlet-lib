@@ -81,13 +81,13 @@ jobs:
         if: ${{ matrix.name == 'linux' && matrix.arch == 'arm64' }}
         run: |
           docker run --rm -v $(pwd):/${{ github.workspace }} -w ${{ github.workspace }} --platform linux/${{ matrix.arch }} arm64v8/ubuntu:oracular /bin/bash -c "
-          apt-get update && apt-get install ca-certificates apt-transport-https curl gnupg build-essential clang make -yqq &&
+          apt-get update && apt-get install ca-certificates apt-transport-https curl gnupg build-essential -yqq &&
           echo 'deb https://repo.scala-sbt.org/scalasbt/debian all main' | tee /etc/apt/sources.list.d/sbt.list &&
           echo 'deb https://repo.scala-sbt.org/scalasbt/debian /' | tee /etc/apt/sources.list.d/sbt_old.list &&
           curl -sL 'https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x2EE0EA64E40A89B84B2DF73499E82A75642AC823' | gpg --no-default-keyring --keyring gnupg-ring:/etc/apt/trusted.gpg.d/scalasbt-release.gpg --import &&
           chmod 644 /etc/apt/trusted.gpg.d/scalasbt-release.gpg &&
           apt-get update &&
-          apt-get install -y openjdk-23-jdk-headless sbt &&
+          apt-get install -y openjdk-23-jdk-headless sbt clang libstdc++-12-dev libgc-dev zlib1g-dev &&
           ./sbt 'wvcLib/nativeLink' &&
           ./sbt 'wvcLibStatic/nativeLink' &&
           mkdir -p out &&
