@@ -83,8 +83,8 @@ jobs:
           docker run --rm -v $(pwd):/${{ github.workspace }} -w ${{ github.workspace }} --platform linux/${{ matrix.arch }} arm64v8/ubuntu:latest /bin/bash -c "
           apt-get update && apt-get install -y ca-certificates &&
           echo 'deb https://repo.scala-sbt.org/scalasbt/debian all main' > /etc/apt/sources.list.d/scala-sbt.list &&
-          apt-get update &&
-          apt-get install -y --allow-unauthenticated openjdk-11-jdk-headless sbt &&
+          apt-get --allow-unauthenticated update &&
+          apt-get install -y openjdk-11-jdk-headless sbt &&
           ./sbt 'wvcLibArm64/nativeLink' &&
           ./sbt 'wvcLibStaticArm64/nativeLink' &&
           mkdir -p out &&
