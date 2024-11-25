@@ -201,6 +201,7 @@ lazy val wvcLibArm64 = project
   .settings(
     buildSettings,
     name := "wvc-lib",
+    target := target.value / "arm64_dynamic", 
     nativeConfig ~= { c =>
       c.withBuildTarget(BuildTarget.libraryDynamic)
         .withTargetTriple("aarch64-unknown-linux-gnu")
@@ -222,7 +223,7 @@ lazy val wvcLibStaticArm64 = project
   .settings(
     buildSettings,
     name := "wvc-lib",
-    target := target.value / "static",
+    target := target.value / "arm64_static",
     nativeConfig ~= { c =>
       c.withBuildTarget(BuildTarget.libraryStatic)
         .withTargetTriple("aarch64-unknown-linux-gnu")
