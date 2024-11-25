@@ -59,13 +59,24 @@ jobs:
           echo SCALA_VERSION: $SCALA_VERSION
           echo "SCALA_VERSION=$SCALA_VERSION" >> $GITHUB_ENV
 
+      - name: Build native libraries for ${{ matrix.name }}-${{ matrix.arch }}
+        run: |
+          ./sbt 'wvcLib/nativeLink'
+          ./sbt 'wvcLibStatic/nativeLink' 
+          FILEPATH=$(find . -name 'libwvlet.*')
+          echo "Found $FILEPATH"
+          mkdir -p out
+          cp $FILEPATH ./out/
+          cd ./out && for f in *.*; do mv -- "$f" "${{ matrix.name }}-${{ matrix.arch }}_$f"; done
+          ls -alFh
+
       - name: Docker Setup QEMU
         if: ${{ matrix.name == 'linux' && matrix.arch == 'arm64' }}
         uses: docker/setup-qemu-action@v2
         with:
           platforms: arm64
             
-      - name: Build native binary in ARM64-emulated environment
+      - name: Re-Build native libraries in ARM64-emulated environment
         if: ${{ matrix.name == 'linux' && matrix.arch == 'arm64' }}
         run: |
           docker run --rm -v $(pwd):/${{ github.workspace }} -w ${{ github.workspace }} --platform linux/${{ matrix.arch }} arm64v8/ubuntu:latest /bin/bash -c "
@@ -80,24 +91,12 @@ jobs:
           cd ./out && for f in *.*; do mv -- \"\$f\" \"linux-arm64_\$f\"; done &&
           ls -alFh"
           
-      - name: Build native binary for ${{ matrix.name }}-${{ matrix.arch }}
-        if: ${{ matrix.name != 'linux' }} && ${{ matrix.arch != 'arm64' }}
-        run: |
-          ./sbt 'wvcLib/nativeLink'
-          ./sbt 'wvcLibStatic/nativeLink' 
-          FILEPATH=$(find . -name 'libwvlet.*')
-          echo "Found $FILEPATH"
-          mkdir -p out
-          cp $FILEPATH ./out/
-          cd ./out && for f in *.*; do mv -- "$f" "${{ matrix.name }}-${{ matrix.arch }}_$f"; done
-          ls -alFh
-          
-      - name: Upload native library for ${{ matrix.name }}-${{ matrix.arch }}
+      - name: Upload native libraries for ${{ matrix.name }}-${{ matrix.arch }}
         uses: actions/upload-artifact@v4
         with:
           name: libwvlet_${{ matrix.name }}-${{ matrix.arch }}
           path: ./out/*.*
-      - name: Upload library to release
+      - name: Upload libraries to release
         if: github.event_name == 'release'
         uses: svenstaro/upload-release-action@v2
         with:
