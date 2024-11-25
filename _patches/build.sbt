@@ -195,6 +195,45 @@ lazy val wvcLibStatic = project
   )
   .dependsOn(wvc)
 
+lazy val wvcLibArm64 = nativeCrossProject(
+  "linux-arm64",
+  "aarch64-unknown-linux-gnu",
+  compileOptions = Seq("--sysroot=/usr/xcc/aarch64-unknown-linux-gnu/aarch64-unknown-linux-gnu/sysroot", "-I/usr/xcc/aarch64-unknown-linux-gnu/include/"),
+  linkerOptions = Seq(
+    "-fuse-ld=/usr/xcc/aarch64-unknown-linux-gnu/bin/aarch64-unknown-linux-gnu-ld",
+    "-L/usr/xcc/aarch64-unknown-linux-gnu/lib",
+    "-L/usr/xcc/aarch64-unknown-linux-gnu/aarch64-unknown-linux-gnu/sysroot",
+    "-L/usr/lib/aarch64-linux-gnu"
+  )
+).settings(
+  buildSettings,
+  name := "wvc-lib-arm64",
+  nativeConfig ~= { c =>
+    c.withBuildTarget(BuildTarget.libraryDynamic)
+      .withBaseName("wvlet")
+  }
+).dependsOn(wvc)
+
+lazy val wvcLibStaticArm64 = nativeCrossProject(
+  "linux-arm64",
+  "aarch64-unknown-linux-gnu",
+  compileOptions = Seq("--sysroot=/usr/xcc/aarch64-unknown-linux-gnu/aarch64-unknown-linux-gnu/sysroot", "-I/usr/xcc/aarch64-unknown-linux-gnu/include/"),
+  linkerOptions = Seq(
+    "-fuse-ld=/usr/xcc/aarch64-unknown-linux-gnu/bin/aarch64-unknown-linux-gnu-ld",
+    "-L/usr/xcc/aarch64-unknown-linux-gnu/lib",
+    "-L/usr/xcc/aarch64-unknown-linux-gnu/aarch64-unknown-linux-gnu/sysroot",
+    "-L/usr/lib/aarch64-linux-gnu"
+  )
+).settings(
+  buildSettings,
+  name := "wvc-lib-static-arm64",
+  target := target.value / "static",
+  nativeConfig ~= { c =>
+    c.withBuildTarget(BuildTarget.libraryStatic)
+      .withBaseName("wvlet")
+  }
+).dependsOn(wvc)
+
 /**
   * @param name
   * @param llvmTriple
