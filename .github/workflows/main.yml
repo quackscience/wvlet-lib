@@ -80,7 +80,7 @@ jobs:
       - name: Re-Build native libraries in ARM64-emulated environment
         if: ${{ matrix.name == 'linux' && matrix.arch == 'arm64' }}
         run: |
-          docker run --rm -v $(pwd):/${{ github.workspace }} -w ${{ github.workspace }} --platform linux/${{ matrix.arch }} arm64v8/ubuntu:latest /bin/bash -c "
+          docker run --rm -v $(pwd):/${{ github.workspace }} -w ${{ github.workspace }} --platform linux/${{ matrix.arch }} arm64v8/ubuntu:oracular /bin/bash -c "
           apt-get update && apt-get install ca-certificates apt-transport-https curl gnupg -yqq &&
           echo 'deb https://repo.scala-sbt.org/scalasbt/debian all main' | tee /etc/apt/sources.list.d/sbt.list &&
           echo 'deb https://repo.scala-sbt.org/scalasbt/debian /' | tee /etc/apt/sources.list.d/sbt_old.list &&
