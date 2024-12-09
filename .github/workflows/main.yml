@@ -42,6 +42,7 @@ jobs:
           path: local
           
       - name: Local Patches for Library -x
+        if: false
         run: |
           cp local/_patches/WvcMain.scala wvc/src/main/scala/wvlet/lang/native/WvcMain.scala
           cp local/_patches/WvcLib.scala wvc/src/main/scala/wvlet/lang/native/WvcLib.scala
