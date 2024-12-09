@@ -70,18 +70,6 @@ jobs:
           cp $FILEPATH ./out/
           cd ./out && for f in *.*; do mv -- "$f" "${{ matrix.name }}-${{ matrix.arch }}_$f"; done
           ls -alFh
-          
-#      - name: Build native libraries for ${{ matrix.name }}-${{ matrix.arch }}
-#        if: ${{ (matrix.name == 'linux' && matrix.arch == 'arm64') }}
-#        run: |
-#          ./sbt 'wvcLibArm64/nativeLink'
-#          ./sbt 'wvcLibStaticArm64/nativeLink'
-#          FILEPATH=$(find . -name 'libwvlet.*')
-#          echo "Found $FILEPATH"
-#          mkdir -p out
-#          cp $FILEPATH ./out/
-#          cd ./out && for f in *.*; do mv -- "$f" "${{ matrix.name }}-${{ matrix.arch }}_$f"; done
-#          ls -alFh
 
       - name: Docker Setup QEMU
         if: ${{ matrix.name == 'linux' && matrix.arch == 'arm64' }}
@@ -102,8 +90,8 @@ jobs:
           apt-get install -y openjdk-23-jdk-headless sbt clang libstdc++-12-dev libgc-dev zlib1g-dev libssl-dev &&
           ./sbt 'wvcLib/nativeLink' &&
           ./sbt 'wvcLibStatic/nativeLink' &&
-          mkdir -p out &&
           FILEPATH=$(find . -name 'libwvlet.*') && echo $FILEPATH &&
+          mkdir -p out &&
           cp $FILEPATH ./out/ &&
           cd ./out && for f in *.*; do mv -- \"\$f\" \"linux-arm64_\$f\"; done &&
           ls -alFh"
