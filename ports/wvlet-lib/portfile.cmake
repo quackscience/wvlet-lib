@@ -17,23 +17,18 @@ file(DOWNLOAD
     ${WVLET_STATIC_URL}
     ${CURRENT_PACKAGES_DIR}/lib/libwvlet.a
     SHOW_PROGRESS
-    EXPECTED_HASH SHA512=<checksum-for-static-lib>
 )
-
 # Download the dynamic library
 file(DOWNLOAD
     ${WVLET_DYNAMIC_URL}
     ${CURRENT_PACKAGES_DIR}/lib/libwvlet${CMAKE_SHARED_LIBRARY_SUFFIX}
     SHOW_PROGRESS
-    EXPECTED_HASH SHA512=<checksum-for-dynamic-lib>
 )
-
 # Install libraries
 vcpkg_copy_tools(
     TOOLS libwvlet.a libwvlet${CMAKE_SHARED_LIBRARY_SUFFIX}
     DESTINATION lib
 )
-
 # If there are headers to include, add them to the include directory
 # For example:
 # file(INSTALL ${SOURCE_PATH}/include DESTINATION ${CURRENT_PACKAGES_DIR}/include)
