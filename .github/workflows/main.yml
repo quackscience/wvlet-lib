@@ -51,10 +51,6 @@ jobs:
           SCALA_VERSION=$(cat SCALA_VERSION)
           echo SCALA_VERSION: $SCALA_VERSION
           echo "SCALA_VERSION=$SCALA_VERSION" >> $GITHUB_ENV
-          
-      - name: Atomic Libs
-        if: ${{ matrix.name == 'linux' && matrix.arch == 'arm64' }}
-        run: sudo apt install -y libatomic1
 
       - name: Build native libraries for ${{ matrix.name }}-${{ matrix.arch }}
         run: |
