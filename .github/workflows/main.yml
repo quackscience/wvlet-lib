@@ -66,6 +66,20 @@ jobs:
           cp $FILEPATH ./out/
           cd ./out && for f in *.*; do mv -- "$f" "${{ matrix.name }}-${{ matrix.arch }}_$f"; done
           ls -alFh
+
+      - name: Repack aarch64 w/ atomic
+        if: ${{ matrix.name == 'linux' && matrix.arch == 'arm64' }}
+        run: |
+          LIBATOMIC_PATH=$(find /usr -name "libatomic.a" 2>/dev/null | head -n 1)
+          mkdir ./tmplib
+          cp ./out/linux-arm64_libwvlet.a ./tmplib/
+          cp $LIBATOMIC_PATH ./tmplib/
+          cd ./tmplib
+          ar -x libatomic.a
+          ar -x linux-arm64_libwvlet.a
+          ar -r libcombined.a *.o
+          rm *.o
+          mv libcombined.a ../out/linux-arm64_libwvlet.a
           
       - name: Upload native libraries for ${{ matrix.name }}-${{ matrix.arch }}
         uses: actions/upload-artifact@v4
