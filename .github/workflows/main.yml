@@ -51,12 +51,23 @@ jobs:
           SCALA_VERSION=$(cat SCALA_VERSION)
           echo SCALA_VERSION: $SCALA_VERSION
           echo "SCALA_VERSION=$SCALA_VERSION" >> $GITHUB_ENV
+          
+      - name: Install Boehm GC
+        if: ${{ matrix.name == 'linux' }}
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgc-dev
+      
+      - name: Install Boehm GC (macOS)
+        if: ${{ matrix.name == 'mac' }}
+        run: |
+          brew install bdw-gc
 
       - name: Build native libraries for ${{ matrix.name }}-${{ matrix.arch }}
         run: |
           ./sbt 'wvcLib/nativeLink'
           ./sbt 'wvcLibStatic/nativeLink' 
-          FILEPATH=$(find . -name 'libwvlet.*')
+          FILEPATH=$(find . -type f \( -name 'libwvlet.so' -o -name 'libwvlet.a' \))
           echo "Found $FILEPATH"
           mkdir -p out
           cp $FILEPATH ./out/
